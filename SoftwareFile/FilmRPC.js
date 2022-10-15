@@ -4,17 +4,25 @@ const config = require("../configRPC/configFilm.json"); //Config RPC Extension
 const { Console } = require("console"); //This is a debug console object that will be used to print errors and warnings in a file
 const fs = require('fs'); //This is a file system object that will be used to write files
 const dataPIDFilm = './killer/PIDs/FilmPID.log' //This is a file system object that will be used to kill his process.
+const Loc = './killer/PIDs/Activity.log'
 
 const LoggerPID = new Console({
     stdout: fs.createWriteStream(dataPIDFilm), //WARNING: this function overwrites existing log stream
-  });
+});
+
+const Activity = new Console({
+    stdout: fs.createWriteStream(Loc), //WARNING: this function overwrites existing log stream
+});
 
 client.login({ clientId: config.ClientID }).catch(console.error); //Logging...
 
 client.on("ready", () => {
 
+    Activity.log('Film')
+    getclear(Loc)
+
     LoggerPID.log(process.pid) //Log the process.pid to the LoggerPID object : dataPIDFilm : ./killer/PIDs/FilmPID.log
-    getclear() //Clear the second line in the FilmPID.log
+    getclear(dataPIDFilm) //Clear the second line in the FilmPID.log
 
     client.request("SET_ACTIVITY", {
         pid: process.pid,
@@ -43,16 +51,16 @@ client.on("ready", () => {
     })
 })
 
-function getclear(){
+function getclear(cleared){
     const removeLines = (data, lines = []) => {
         return data
             .split('\n')
             .filter((val, idx) => lines.indexOf(idx) === -1)
             .join('\n');
     }
-    fs.readFile(dataPIDFilm, 'utf8', (err, data) => {
-        if (err) throw err;      
-        fs.writeFile(dataPIDFilm, removeLines(data, [1]), 'utf8', function(err) {
+    fs.readFile(cleared, 'utf8', (err, data) => {
+        if (err) throw err;
+        fs.writeFile(cleared, removeLines(data, [1]), 'utf8', function(err) {
             if (err) throw err;
         });
     })
