@@ -1,7 +1,7 @@
 //NOTE : L'activation simple des RPC est possible via la commande /enablerpc sans importance avec editing or writing
 // or coding...
 
-//Chose à faire rapidement : Arrêter le RPC avec la commande marche pour Word ! (via killerWord.js)
+//Chose à faire rapidement 
 //                           Regarder pour mettre les patch file
 //                           Changer le process, mais à voir si pas de confusion?
 // 
@@ -12,8 +12,8 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 const { token } = require("./config.json");
 const process = require("process"); //Need for console?log
 const cp = require("child_process"); //Need for run other js file
-const Software1 = {} //Need for killing proc
-//const fs = require('fs')
+const fs = require('fs')
+const LocAct = './killer/PIDs/Activity.log'
 
 
 console.log(`Launching in progress by NodeJS : ${process.execPath}`)
@@ -26,11 +26,9 @@ client.once("ready", () => {
 
 client.on("interactionCreate", async interaction => {
     if (!interaction.isChatInputCommand()) return;
-    console.log(interaction.options.getString("software"))
+    //console.log(interaction.options.getString("software"))
 
     const { commandName } = interaction;
-    const SoftwareSearch =  interaction.options.getString("software")
-    const SoftwareJS = SoftwareSearch.charAt(0).toUpperCase() + SoftwareSearch.slice(1);
     
     if (commandName === "ping"){
         await interaction.reply("Pong !");
@@ -38,8 +36,13 @@ client.on("interactionCreate", async interaction => {
         await interaction.reply("Server Info !");
     } else if (commandName === "enablerpc") {
 
+        const SoftwareSearch =  interaction.options.getString("software")
+
+        const SoftwareJS = SoftwareSearch.charAt(0).toUpperCase() + SoftwareSearch.slice(1)
+
         await interaction.reply(`Activation du RPC... Software use : ${SoftwareSearch} and : ${SoftwareJS}`);
-        
+        console.log(SoftwareSearch)
+
         cp.exec(`node ./SoftwareFile/${SoftwareJS}RPC.js`, function(stdout){
             console.log(stdout);
         });
@@ -47,32 +50,17 @@ client.on("interactionCreate", async interaction => {
     } else if (commandName === "changerpc") {
         await interaction.reply("Changement du RPC...");
     } else if (commandName === "stoprpc") {
-        await interaction.reply(`RPC STOP : ${Software1.searchS}`);
 
-        /*cp.exec(`node ./killer/${Software1.searchS}.js`, function(stdout){
-            console.log(stdout);
-        })*/
+        fs.readFile(LocAct, 'utf8', function (err, dataStop) {
+            if (err) throw err;
+            interaction.reply(`RPC STOP : ${dataStop}`);
+            cp.exec(`node ./killer/killer${dataStop}.js`, function(stdout){
+                console.log(stdout);
+            })
+          });
     } 
-})
+});
 
 client.login(token);
-
-/*
-async function stop(){
-    console.log(Software1.searchS)
-    if (Software1.searchS === 'word') {
-        cp.exec("node ./killer/killerWord.js", function(error, stdout, stderr){
-            console.log(stdout);
-        });
-        } else if (Software1.searchS === 'chrome') {
-        
-        cp.exec("node ./killer/killerChrome.js", function(error, stdout, stderr){
-            console.log(stdout);
-        });
-            } else {
-            console.log('InvalidArgumentError   - Invalid argument passed   to KillPid');
-        }
-    }
-*/
 
 //CC : Magik#7123
