@@ -13,7 +13,13 @@ const { token } = require("./config.json");
 const process = require("process"); //Need for console?log
 const cp = require("child_process"); //Need for run other js file
 const fs = require('fs')
-const LocAct = './killer/PIDs/Activity.log'
+const { Console } = require("console"); //This is a debug console object that will be used to print errors and warnings in a file
+const LocAct = './killer/PIDs/Activity.log';
+const tempChoices = './configRPC/tempfile.txt'
+
+const SelectChoices = new Console({
+    stdout: fs.createWriteStream(tempChoices), //WARNING: this function overwrites existing log stream
+  });
 
 
 console.log(`Launching in progress by NodeJS : ${process.execPath}`)
@@ -26,7 +32,11 @@ client.once("ready", () => {
 
 client.on("interactionCreate", async interaction => {
     if (!interaction.isChatInputCommand()) return;
-    //console.log(interaction.options.getString("software"))
+
+    //Logs somethings...
+    console.log('DEBUG : ' + interaction.options.getString("software"))
+    console.log('DEBUG : ' + interaction.options.getString("editingorwritting"))
+    console.log('DEBUG : ' + interaction.options.getString("patchfile"))
 
     const { commandName } = interaction;
     
@@ -40,9 +50,56 @@ client.on("interactionCreate", async interaction => {
 
         const SoftwareJS = SoftwareSearch.charAt(0).toUpperCase() + SoftwareSearch.slice(1)
 
-        await interaction.reply(`Activation du RPC... Software use : ${SoftwareSearch} and : ${SoftwareJS}`);
-        console.log(SoftwareSearch)
+        const SoftwareEOWOC = interaction.options.getString("editingorwritting")
 
+        const SoftwarePatch = interaction.options.getString("patchfile")
+
+        SelectChoices.log(SoftwareJS)
+        SelectChoices.log(SoftwareEOWOC)
+        switch (SoftwarePatch){
+            case null:
+
+                function getclearN(cleared){
+                    const removeLines = (data, lines = []) => {
+                        return data
+                            .split('\n')
+                            .filter((val, idx) => lines.indexOf(idx) === -1)
+                            .join('\n');
+                    }
+                    fs.readFile(cleared, 'utf8', (err, data) => {
+                        if (err) throw err;
+                        fs.writeFile(cleared, removeLines(data, [2]), 'utf8', function(err) {
+                            if (err) throw err;
+                        });
+                    })
+                }
+
+                getclearN(tempChoices);
+                break;
+            case (`${SoftwarePatch}`):
+
+                SelectChoices.log(SoftwarePatch)
+
+                function getclearS(cleared){
+                    const removeLines = (data, lines = []) => {
+                        return data
+                            .split('\n')
+                            .filter((val, idx) => lines.indexOf(idx) === -1)
+                            .join('\n');
+                    }
+                    fs.readFile(cleared, 'utf8', (err, data) => {
+                        if (err) throw err;
+                        fs.writeFile(cleared, removeLines(data, [3]), 'utf8', function(err) {
+                            if (err) throw err;
+                        });
+                    })
+                }
+                getclearS(tempChoices);
+                break;
+        } 
+
+        await interaction.reply(`Activation du RPC... Software use : ${SoftwareSearch} and : ${SoftwareJS}`);
+        
         cp.exec(`node ./SoftwareFile/${SoftwareJS}RPC.js`, function(stdout){
             console.log(stdout);
         });
