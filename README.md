@@ -7,7 +7,7 @@ MagikRPC is a bot that allows you to run remote RPCs for your Discord account vi
 /stopRPC <br /> 
 /stopbot (WARNING : THIS SHUTDOWN THE BOT ! MAGIKRPC WILL BE SHUTDOWN ! Don't use this !) <br />
 /infoMagik <br />
-/info User or Server <br />
+/info User or Server (About RAM, CPU, & DISK) <br />
 
 Software available for the moment:
 
