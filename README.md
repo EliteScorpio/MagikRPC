@@ -1,30 +1,21 @@
 # MagikRPC
+-- For the moment, MagikRPC needs a makeover, but this is already 1 preview. ---
 
-MagikRPC is a bot that allows you to run remote RPCs for your Discord account via chat commands!
+MagikRPC is a Bot that lets you use remote commands to set various RPC statuses.
 
-/enableRPC Software PatchFile Usage <br />
-/changeRPC Software PatchFile Usage <br />
-/stopRPC <br /> 
-/stopbot (WARNING : THIS SHUTDOWN THE BOT ! MAGIKRPC WILL BE SHUTDOWN ! Don't use this !) <br />
-/infoMagik <br />
-/info User or Server (About RAM, CPU, & DISK) <br />
+It's coded in JavaScript and requires several elements: not only is NodeJS required, but Administrator Rights (using a killer) and Discord Client are also required.
 
-Software available for the moment:
+So you need to have the bot on your server, but you also need to have these files on your PC or in a place where you also have your Discord client, since an RPC can only act with the Discord Client.
 
-Word
-Chrome
-Movie (Simple sharing of info: Title, duration, actors. No movie piracy.)
-VsCode
-PS2020 
-PS2021
-AE
-A little troll : Other
+It consists of several commands:
 
-You can modify from the chat but also disable the RPC remotely.<br />
+/enableRPC SoftwareName PatchFile Usage </br>
+/changerRPC SoftwareName PatchUsage Usage </br>
+/stopRPC </br>
+/stopbot (This kills NodeJS) </br>
+/infoMagik </br>
+/info User or Server  </br>
 
+The list of available software: Word, Chrome, Film (Title, Duration, Actors) VSCode, PS2020, 21, AE, Other
 
-Configuration : <br />
-
-NodeJS (Discord.js & child_process & process) <br />
-Administrators rights (/!/ without that, impossible to finish the remote RPC...) <br />
-A RaspberryPI for example, a VPS, or other Linux or Windows which has an access to Internet.
+Translated with DeepL.com (free version)
